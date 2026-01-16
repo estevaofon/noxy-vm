@@ -1,0 +1,14 @@
+use io
+
+func main()
+    print("Testing IO blacklist...")
+    try_call(func()
+        let f: File = io.open("test.txt", "w")
+    end)
+end
+
+func try_call(f: func)
+    f()
+end
+
+main()

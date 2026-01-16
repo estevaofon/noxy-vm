@@ -103,10 +103,12 @@ type VM struct {
 
 type VMConfig struct {
 	RootPath string
+	SafeMode bool
 }
 
 func New() *VM {
-	return NewWithConfig(VMConfig{RootPath: "."})
+	// Default to SafeMode=true for this branch as requested
+	return NewWithConfig(VMConfig{RootPath: ".", SafeMode: true})
 }
 
 func NewWithConfig(cfg VMConfig) *VM {
@@ -2924,6 +2926,11 @@ func NewWithShared(shared *SharedState, cfg VMConfig) *VM {
 }
 
 func (vm *VM) DefineNative(name string, fn value.NativeFunc) {
+	if vm.Config.SafeMode {
+		if strings.HasPrefix(name, "sys_") || strings.HasPrefix(name, "sqlite_") || strings.HasPrefix(name, "io_") {
+			return
+		}
+	}
 	// Check if already defined in shared globals to avoid overwriting with thread-local closure
 	if _, ok := vm.GetGlobal(name); ok {
 		return

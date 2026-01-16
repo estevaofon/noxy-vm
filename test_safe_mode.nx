@@ -1,0 +1,31 @@
+use sys
+use io
+use sqlite
+use crypto
+
+func main()
+    print("Testing Safe Mode...")
+
+    // 1. Test Crypto (Allowed)
+    print("Testing crypto (should allow)...")
+    print(crypto.sha256("test"))
+
+    // 2. Test Sys
+    print("Trying sys.os()...")
+    // This should fail
+    try_call(func() 
+        print(sys.os()) 
+    end)
+
+end
+
+func try_call(f: func)
+    // Noxy doesn't have try-catch yet blocks for runtime errors in this version?
+    // The previous analysis of VM `runtimeError` showed it returns error from Interpret.
+    // There is no `try` opcode.
+    // So the script WILL CRASH on the first error.
+    // We will have to run separate checks or expect crash.
+    f()
+end
+
+main()

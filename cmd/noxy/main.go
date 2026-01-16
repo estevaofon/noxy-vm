@@ -79,7 +79,7 @@ func startREPL(showDisasm bool) {
 	fmt.Println("Type 'exit' to quit.")
 
 	// Shared VM for persistence
-	machine := vm.NewWithConfig(vm.VMConfig{RootPath: "."})
+	machine := vm.NewWithConfig(vm.VMConfig{RootPath: ".", SafeMode: true})
 	scanner := bufio.NewScanner(os.Stdin)
 
 	// Persist globals across REPL lines
@@ -246,7 +246,7 @@ func runWithConfig(filename string, input string, rootPath string, showDisasm bo
 		fmt.Printf("\nExecution:\n")
 	}
 
-	machine := vm.NewWithConfig(vm.VMConfig{RootPath: rootPath})
+	machine := vm.NewWithConfig(vm.VMConfig{RootPath: rootPath, SafeMode: true})
 	if err := machine.Interpret(chunk); err != nil {
 		fmt.Printf("Runtime error: %s\n", err)
 		os.Exit(1)
